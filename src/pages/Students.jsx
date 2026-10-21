@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
+import { envData } from "../data";
 
 function Students() {
   const [students, setStudents] = useState([]);
@@ -11,7 +12,7 @@ function Students() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await fetch("http://localhost:4001/api/students");
+        const response = await fetch(`${envData.apiUrl}/students`);
         if (!response.ok) {
           throw new Error("Failed to fetch students from the server.");
         }
@@ -43,11 +44,10 @@ function Students() {
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans w-full">
       <Sidebar />
-      
+
       {/* Main Content Wrapper - Takes remaining space and enables scrolling */}
       <div className="flex-1 overflow-y-auto p-6 md:p-8">
         <div className="max-w-7xl mx-auto animate-fade-in">
-          
           {/* Animated Gradient Header */}
           <div className="flex items-center gap-3 mb-8 transform transition-all duration-500 hover:translate-x-2">
             <span className="text-4xl animate-bounce">🎓</span>
@@ -60,8 +60,20 @@ function Students() {
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
             <div className="relative flex-1 group">
               <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                <svg aria-hidden="true" className="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                <svg
+                  aria-hidden="true"
+                  className="w-5 h-5 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
                 </svg>
               </div>
               <input
@@ -92,10 +104,12 @@ function Students() {
               <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
               <div className="w-4 h-4 bg-purple-500 rounded-full animation-delay-200"></div>
               <div className="w-4 h-4 bg-pink-500 rounded-full animation-delay-400"></div>
-              <p className="text-gray-500 font-medium ml-3">Loading student records...</p>
+              <p className="text-gray-500 font-medium ml-3">
+                Loading student records...
+              </p>
             </div>
           )}
-          
+
           {error && (
             <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl shadow-sm mb-6 animate-pulse">
               <p className="text-red-700 font-semibold">⚠️ Error: {error}</p>
@@ -108,13 +122,27 @@ function Students() {
               <table className="w-full text-left border-collapse whitespace-nowrap">
                 <thead>
                   <tr className="bg-gradient-to-r from-gray-50 to-gray-100 border-b-2 border-gray-200">
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Roll No.</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Full Name</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Department</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Email ID</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Contact</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Borrowed Books</th>
-                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Account Status</th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      Roll No.
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      Full Name
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      Department
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      Email ID
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      Contact
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">
+                      Borrowed Books
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">
+                      Account Status
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -138,7 +166,10 @@ function Students() {
                             {student.department}
                           </td>
                           <td className="px-6 py-4">
-                            <a href={`mailto:${student.email}`} className="text-blue-500 hover:text-blue-700 hover:underline transition-all duration-300">
+                            <a
+                              href={`mailto:${student.email}`}
+                              className="text-blue-500 hover:text-blue-700 hover:underline transition-all duration-300"
+                            >
                               {student.email}
                             </a>
                           </td>
@@ -164,7 +195,9 @@ function Students() {
                                   : "bg-rose-100 text-rose-700 border border-rose-200 shadow-rose-100"
                               }`}
                             >
-                              <span className={`inline-block w-2 h-2 rounded-full mr-2 ${student.status === "Active" ? "bg-emerald-500 animate-pulse" : "bg-rose-500"}`}></span>
+                              <span
+                                className={`inline-block w-2 h-2 rounded-full mr-2 ${student.status === "Active" ? "bg-emerald-500 animate-pulse" : "bg-rose-500"}`}
+                              ></span>
                               {student.status}
                             </span>
                           </td>
@@ -172,10 +205,28 @@ function Students() {
                       ))
                   ) : (
                     <tr>
-                      <td colSpan="7" className="px-6 py-16 text-center text-gray-500 bg-gray-50/50">
+                      <td
+                        colSpan="7"
+                        className="px-6 py-16 text-center text-gray-500 bg-gray-50/50"
+                      >
                         <div className="flex flex-col items-center justify-center space-y-3">
-                          <svg className="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                          <p className="text-lg font-medium">No student records matched your search filters.</p>
+                          <svg
+                            className="w-12 h-12 text-gray-300"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            ></path>
+                          </svg>
+                          <p className="text-lg font-medium">
+                            No student records matched your search filters.
+                          </p>
                         </div>
                       </td>
                     </tr>

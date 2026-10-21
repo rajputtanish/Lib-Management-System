@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { envData } from "../data";
 
 const IssueBook = ({ onIssue, onClose, book }) => {
   const [students, setStudents] = useState([]);
@@ -10,7 +11,7 @@ const IssueBook = ({ onIssue, onClose, book }) => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await fetch("http://localhost:4001/api/students");
+        const response = await fetch(`${envData.apiUrl}/students`);
         const data = await response.json();
 
         setStudents(data);
@@ -52,7 +53,7 @@ const IssueBook = ({ onIssue, onClose, book }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:4001/api/books-issued", {
+      const response = await fetch(`${envData.apiUrl}/books-issued`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

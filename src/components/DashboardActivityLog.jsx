@@ -1,5 +1,5 @@
-
 import React, { useEffect, useState } from "react";
+import { envData } from "../data";
 
 const DashboardActivityLog = () => {
   const [activities, setActivities] = useState([]);
@@ -8,9 +8,7 @@ const DashboardActivityLog = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:4001/api/books-issued"
-        );
+        const response = await fetch(`${envData.apiUrl}/books-issued`);
 
         const result = await response.json();
 
@@ -71,9 +69,8 @@ const DashboardActivityLog = () => {
     });
   };
 
-return (
+  return (
     <div className="bg-white border border-gray-200 p-6 md:p-7 rounded-2xl flex-1 flex flex-col h-full shadow-sm max-h-[500px]">
-      
       {/* Header section */}
       <h4 className="text-gray-900 border-b border-slate-100 pb-4 mb-2 font-bold text-lg flex items-center gap-2 shrink-0">
         <span className="text-xl">📋</span> Activity Log
@@ -113,7 +110,8 @@ return (
                 </p>
 
                 <p className="text-xs text-slate-400 mt-1.5 font-medium flex items-center gap-1">
-                  <span className="text-[10px]">🕒</span> {formatTime(activity.time)}
+                  <span className="text-[10px]">🕒</span>{" "}
+                  {formatTime(activity.time)}
                 </p>
               </div>
             </div>
