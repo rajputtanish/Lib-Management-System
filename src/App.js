@@ -7,7 +7,7 @@ import Students from "./pages/Students";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/Lib-Management-System">
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/books" element={<Books />} />
