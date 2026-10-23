@@ -265,9 +265,9 @@ function Books() {
       <Sidebar />
 
       {/* Main Content Area - Scrollable */}
-      <div className="flex-1 overflow-y-auto p-6 md:p-8 pt-6">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-slate-800 tracking-tight mt-0 mb-8">
+      <div className="flex-1 overflow-y-auto p-4 md:p-8">
+        <div className="max-w-6xl mx-auto pt-16 md:pt-0">
+          <h2 className="text-2xl md:text-3xl font-extrabold mb-9 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">
             Library Inventory Management
           </h2>
 
@@ -308,8 +308,8 @@ function Books() {
             >
               {activeForm === "remove" ? "Close Remove Form" : "Remove Book"}
             </button>
-
           </div>
+
 
           {/* Conditionally Rendered Forms */}
           {activeForm === "add" && (

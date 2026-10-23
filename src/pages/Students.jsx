@@ -78,9 +78,8 @@ function Students() {
       <div className="flex-1 overflow-y-auto p-6 md:p-8">
         <div className="max-w-7xl mx-auto animate-fade-in">
           {/* Animated Gradient Header */}
-          <div className="flex items-center gap-3 mb-8 transform transition-all duration-500 hover:translate-x-2">
-            <span className="text-4xl animate-bounce">🎓</span>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">
+          <div className="flex items-center gap-3 mb-8 transform justify-center transition-all duration-500 hover:translate-x-2">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600">
               Student Directory
             </h2>
           </div>
