@@ -31,6 +31,8 @@ function Books() {
 
   const [returnBookId, setReturnBookId] = useState("");
 
+  const [removeBookId, setRemoveBookId] = useState("");
+
   useEffect(() => {
     const fetchInventory = async () => {
       try {
@@ -122,6 +124,45 @@ function Books() {
 
       // 3. Clean up the form
       setReturnBookId("");
+      setActiveForm(null);
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
+  };
+
+  const handleRemoveBook = async (e) => {
+    e.preventDefault();
+    if (!removeBookId) {
+      alert("Please enter at least one Book ID.");
+      return;
+    }
+
+    // Parse the string into a clean array: "BK-1, BK-2 " -> ["BK-1", "BK-2"]
+    const idsArray = removeBookId
+      .split(",")
+      .map((id) => id.trim())
+      .filter((id) => id !== "");
+
+    try {
+      const response = await fetch(`${envData.apiUrl}/books`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ bookIds: idsArray }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to remove books");
+      }
+
+      // Update local state by filtering out all deleted books
+      setInventory(inventory.filter((book) => !idsArray.includes(book.id)));
+      
+      alert(data.message);
+      setRemoveBookId("");
       setActiveForm(null);
     } catch (error) {
       alert(`Error: ${error.message}`);
@@ -255,6 +296,19 @@ function Books() {
             >
               {activeForm === "return" ? "Close Return Form" : "Return Book"}
             </button>
+
+            {/* Add this button inside your <div className="flex flex-wrap gap-4 mb-8"> */}
+            <button
+              className={`px-5 py-2.5 rounded-xl font-semibold transition-all duration-200 shadow-sm border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ${
+                activeForm === "remove"
+                  ? "bg-red-600 text-white border-red-600 ring-4 ring-red-100"
+                  : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400 hover:text-red-600"
+              }`}
+              onClick={() => setActiveForm(activeForm === "remove" ? null : "remove")}
+            >
+              {activeForm === "remove" ? "Close Remove Form" : "Remove Book"}
+            </button>
+
           </div>
 
           {/* Conditionally Rendered Forms */}
@@ -339,6 +393,30 @@ function Books() {
                   className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-semibold py-3.5 px-8 rounded-xl shadow-sm transition-colors duration-200 outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                 >
                   Return Book
+                </button>
+              </form>
+            </div>
+          )}
+
+          {activeForm === "remove" && (
+            <div className="bg-rose-50 p-6 md:p-8 rounded-2xl shadow-sm border border-rose-200 mb-8 animate-in fade-in slide-in-from-top-2 duration-300">
+              <h3 className="text-xl font-bold text-rose-800 mt-0 mb-5 flex items-center gap-2">
+                ⚠️ Remove Book from Library
+              </h3>
+              <form onSubmit={handleRemoveBook} className="space-y-4">
+                <input
+                type="text"
+                placeholder="Enter Book IDs separated by commas (e.g. BK-1234-A, BK-1234-B)"
+                value={removeBookId}
+                onChange={(e) => setRemoveBookId(e.target.value)}
+                required
+                className="w-full p-3.5 bg-white border border-rose-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
+              />
+                <button
+                  type="submit"
+                  className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-semibold py-3.5 px-8 rounded-xl shadow-sm transition-colors duration-200 outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                >
+                  Permanently Delete
                 </button>
               </form>
             </div>

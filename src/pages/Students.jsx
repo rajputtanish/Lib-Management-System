@@ -9,6 +9,11 @@ function Students() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // New states for the Borrowed Books Modal
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [borrowedBooks, setBorrowedBooks] = useState([]);
+  const [isBooksLoading, setIsBooksLoading] = useState(false);
+
   useEffect(() => {
     const fetchStudents = async () => {
       try {
@@ -28,6 +33,30 @@ function Students() {
     fetchStudents();
   }, []);
 
+  // Fetch detailed borrowed books for a specific student
+  const handleViewBooks = async (student) => {
+    if (student.booksBorrowed === 0) return; // Do nothing if 0 books
+    
+    setSelectedStudent(student);
+    setIsBooksLoading(true);
+    
+    try {
+      const response = await fetch(`${envData.apiUrl}/books-issued/student/${student.rollNo}`);
+      const result = await response.json();
+      
+      if (response.ok) {
+        setBorrowedBooks(result.data);
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      console.error("Error fetching borrowed books:", error);
+      alert("Failed to load borrowed books details.");
+    } finally {
+      setIsBooksLoading(false);
+    }
+  };
+
   // Dynamic filter for search bar and department dropdown menu
   const filteredStudents = students.filter((student) => {
     const matchesSearch =
@@ -42,10 +71,10 @@ function Students() {
   });
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans w-full">
+    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans w-full relative">
       <Sidebar />
 
-      {/* Main Content Wrapper - Takes remaining space and enables scrolling */}
+      {/* Main Content Wrapper */}
       <div className="flex-1 overflow-y-auto p-6 md:p-8">
         <div className="max-w-7xl mx-auto animate-fade-in">
           {/* Animated Gradient Header */}
@@ -177,15 +206,18 @@ function Students() {
                             {student.phone}
                           </td>
                           <td className="px-6 py-4 text-center">
-                            <span
-                              className={`inline-block px-4 py-1.5 rounded-full text-sm font-bold transform transition-all duration-300 hover:scale-110 ${
+                            <button
+                              onClick={() => handleViewBooks(student)}
+                              disabled={student.booksBorrowed === 0}
+                              className={`inline-block px-4 py-1.5 rounded-full text-sm font-bold transform transition-all duration-300 ${
                                 student.booksBorrowed > 0
-                                  ? "bg-amber-100 text-amber-700 shadow-sm shadow-amber-200"
-                                  : "bg-gray-100 text-gray-500"
+                                  ? "bg-amber-100 text-amber-700 shadow-sm shadow-amber-200 hover:scale-110 cursor-pointer hover:bg-amber-200 ring-2 ring-transparent focus:ring-amber-400 outline-none"
+                                  : "bg-gray-100 text-gray-500 cursor-not-allowed"
                               }`}
+                              title={student.booksBorrowed > 0 ? "Click to view borrowed books" : "No books borrowed"}
                             >
                               {student.booksBorrowed}
-                            </span>
+                            </button>
                           </td>
                           <td className="px-6 py-4 text-center">
                             <span
@@ -237,6 +269,80 @@ function Students() {
           )}
         </div>
       </div>
+
+      {/* Borrowed Books Modal */}
+      {selectedStudent && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden border border-slate-200 flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-200">
+            
+            {/* Modal Header */}
+            <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+              <div>
+                <h3 className="text-xl font-bold text-slate-800 m-0">
+                  📚 Books Borrowed by {selectedStudent.name}
+                </h3>
+                <p className="text-sm text-slate-500 mt-1 font-medium">
+                  Roll No: {selectedStudent.rollNo} • {selectedStudent.department}
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedStudent(null)}
+                className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-colors outline-none"
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 overflow-y-auto">
+              {isBooksLoading ? (
+                <div className="flex justify-center items-center py-10">
+                  <div className="w-6 h-6 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                  <span className="ml-3 text-slate-500 font-medium">Loading records...</span>
+                </div>
+              ) : borrowedBooks.length > 0 ? (
+                <div className="space-y-4">
+                  {borrowedBooks.map((record) => (
+                    <div key={record.id} className="p-4 rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row justify-between gap-4">
+                      <div>
+                        <h4 className="font-bold text-slate-800 text-lg m-0">{record.bookTitle}</h4>
+                        <p className="text-sm text-slate-600 font-medium m-0 mt-1">By {record.bookAuthor}</p>
+                        <div className="flex gap-2 mt-3">
+                          <span className="text-xs font-bold px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md border border-slate-200 font-mono">
+                            ID: {record.bookId}
+                          </span>
+                          <span className="text-xs font-bold px-2.5 py-1 bg-blue-50 text-blue-600 rounded-md border border-blue-100">
+                            {record.department}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-left sm:text-right flex flex-col justify-center border-t sm:border-t-0 sm:border-l border-slate-100 pt-3 sm:pt-0 sm:pl-4">
+                        <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1 m-0">Issued On</p>
+                        <p className="text-sm font-semibold text-slate-700 m-0">
+                          {new Date(record.borrowTime).toLocaleDateString('en-IN', {
+                            day: 'numeric', month: 'short', year: 'numeric'
+                          })}
+                        </p>
+                        <p className="text-xs text-slate-500 mt-1 m-0">
+                          {new Date(record.borrowTime).toLocaleTimeString('en-IN', {
+                            hour: '2-digit', minute: '2-digit'
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-10">
+                  <p className="text-slate-500 text-lg">No active borrowed books found.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
