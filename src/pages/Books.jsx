@@ -100,13 +100,16 @@ function Books() {
     }
 
     try {
+      // ... existing code
       const response = await fetch(`${envData.apiUrl}/books-issued/return`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ bookId: returnBookId }),
+        // Add .trim() here to remove accidental spaces from the input
+        body: JSON.stringify({ bookId: returnBookId.trim() }), 
       });
+// ... existing code
 
       const data = await response.json();
 
