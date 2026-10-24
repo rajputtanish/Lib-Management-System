@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+// Remove useNavigate import since logout is now handled in Sidebar
 import Sidebar from "../components/Sidebar";
 import DashboardActivityLog from "../components/DashboardActivityLog";
-import { envData } from "../data";
+
+const MOCK_STATS = [
+  { title: "Total Library Books", count: "4,300", color: "#e3f2fd", textColor: "#0d47a1" },
+  { title: "Registered Students", count: "755", color: "#e8f5e9", textColor: "#1b5e20" },
+  { title: "Active Book Loans", count: "226", color: "#fff3e0", textColor: "#e65100" },
+];
 
 const DEPARTMENTS = [
   { name: "Computer Science" }, { name: "English Literature" },
@@ -10,56 +16,13 @@ const DEPARTMENTS = [
 
 function Dashboard() {
   const [departments] = useState(DEPARTMENTS);
-  
-  // Initialize with loading placeholders
-  const [stats, setStats] = useState([
-    { title: "Total Library Books", count: "...", color: "#e3f2fd", textColor: "#0d47a1" },
-    { title: "Registered Students", count: "...", color: "#e8f5e9", textColor: "#1b5e20" },
-    { title: "Active Book Loans", count: "...", color: "#fff3e0", textColor: "#e65100" },
-  ]);
-
-  useEffect(() => {
-    const fetchDashboardStats = async () => {
-      try {
-        // Fetch all data concurrently for better performance
-        const [booksRes, studentsRes, issuedRes] = await Promise.all([
-          fetch(`${envData.apiUrl}/books`),
-          fetch(`${envData.apiUrl}/students`),
-          fetch(`${envData.apiUrl}/books-issued`),
-        ]);
-
-        const booksData = await booksRes.json();
-        const studentsData = await studentsRes.json();
-        const issuedResult = await issuedRes.json();
-
-        // Calculate actual counts based on your backend response structures
-        const totalBooksCount = booksData.length;
-        const registeredStudentsCount = studentsData.length;
-        
-        // Filter issued books to only count those that haven't been returned
-        const activeLoansCount = issuedResult.data
-          ? issuedResult.data.filter(issue => issue.returnTime === null).length
-          : 0;
-
-        setStats([
-          { title: "Total Library Books", count: totalBooksCount, color: "#e3f2fd", textColor: "#0d47a1" },
-          { title: "Registered Students", count: registeredStudentsCount, color: "#e8f5e9", textColor: "#1b5e20" },
-          { title: "Active Book Loans", count: activeLoansCount, color: "#fff3e0", textColor: "#e65100" },
-        ]);
-      } catch (error) {
-        console.error("Error fetching dashboard statistics:", error);
-      }
-    };
-
-    fetchDashboardStats();
-  }, []);
 
   return (
     <div className="flex h-screen bg-slate-50 w-full overflow-hidden font-sans">
       <Sidebar />
 
       <div className="flex-1 flex flex-col bg-slate-50 h-full overflow-hidden">
-        {/* Top Navbar */}
+        {/* Top Navbar - Cleaned up */}
         <header className="h-[60px] bg-white border-b border-slate-200 flex items-center px-4 sm:px-8 shrink-0 pl-16 md:pl-8">
           <h2 className="m-0 text-lg sm:text-2xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-500 truncate">
             Dashboard
@@ -73,8 +36,8 @@ function Dashboard() {
             {/* LEFT SUB-PANEL */}
             <div className="flex-[3] flex flex-col gap-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
-                {stats.map((stat, i) => (
-                  <div key={i} style={{ backgroundColor: stat.color, color: stat.textColor }} className="p-5 rounded-xl shadow-sm transition-all duration-300 hover:shadow-md">
+                {MOCK_STATS.map((stat, i) => (
+                  <div key={i} style={{ backgroundColor: stat.color, color: stat.textColor }} className="p-5 rounded-xl shadow-sm">
                     <p className="m-0 mb-1 text-xs sm:text-sm uppercase tracking-wider font-semibold">{stat.title}</p>
                     <h1 className="m-0 text-3xl sm:text-4xl font-bold">{stat.count}</h1>
                   </div>
