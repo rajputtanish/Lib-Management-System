@@ -2,16 +2,34 @@ import React, { useState } from "react";
 // Remove useNavigate import since logout is now handled in Sidebar
 import Sidebar from "../components/Sidebar";
 import DashboardActivityLog from "../components/DashboardActivityLog";
+import DashboardStats from "../components/DashboardStats";
 
-const MOCK_STATS = [
-  { title: "Total Library Books", count: "4,300", color: "#e3f2fd", textColor: "#0d47a1" },
-  { title: "Registered Students", count: "755", color: "#e8f5e9", textColor: "#1b5e20" },
-  { title: "Active Book Loans", count: "226", color: "#fff3e0", textColor: "#e65100" },
-];
+// const MOCK_STATS = [
+//   {
+//     title: "Total Library Books",
+//     count: "4,300",
+//     color: "#e3f2fd",
+//     textColor: "#0d47a1",
+//   },
+//   {
+//     title: "Registered Students",
+//     count: "755",
+//     color: "#e8f5e9",
+//     textColor: "#1b5e20",
+//   },
+//   {
+//     title: "Active Book Loans",
+//     count: "226",
+//     color: "#fff3e0",
+//     textColor: "#e65100",
+//   },
+// ];
 
 const DEPARTMENTS = [
-  { name: "Computer Science" }, { name: "English Literature" },
-  { name: "Physics" }, { name: "Social Sciences" },
+  { name: "Computer Science" },
+  { name: "English Literature" },
+  { name: "Physics" },
+  { name: "Social Sciences" },
 ];
 
 function Dashboard() {
@@ -32,17 +50,9 @@ function Dashboard() {
         {/* Content Area */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-8">
           <div className="flex flex-col lg:flex-row gap-6 max-w-7xl mx-auto">
-            
             {/* LEFT SUB-PANEL */}
             <div className="flex-[3] flex flex-col gap-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
-                {MOCK_STATS.map((stat, i) => (
-                  <div key={i} style={{ backgroundColor: stat.color, color: stat.textColor }} className="p-5 rounded-xl shadow-sm">
-                    <p className="m-0 mb-1 text-xs sm:text-sm uppercase tracking-wider font-semibold">{stat.title}</p>
-                    <h1 className="m-0 text-3xl sm:text-4xl font-bold">{stat.count}</h1>
-                  </div>
-                ))}
-              </div>
+              <DashboardStats />
               <DashboardActivityLog />
             </div>
 
@@ -53,13 +63,15 @@ function Dashboard() {
               </h3>
               <ul className="list-none p-0 m-0 space-y-1">
                 {departments.map((dept, index) => (
-                  <li key={index} className="py-2 border-b border-slate-50 last:border-0 text-slate-700 font-medium text-sm flex items-center gap-2">
+                  <li
+                    key={index}
+                    className="py-2 border-b border-slate-50 last:border-0 text-slate-700 font-medium text-sm flex items-center gap-2"
+                  >
                     <span className="text-blue-500">•</span> {dept.name}
                   </li>
                 ))}
               </ul>
             </div>
-
           </div>
         </main>
       </div>
