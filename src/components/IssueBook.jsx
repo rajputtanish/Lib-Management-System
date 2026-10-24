@@ -25,8 +25,13 @@ const IssueBook = ({ onIssue, onClose, book }) => {
     fetchStudents();
   }, []);
 
-  // Search by name or roll number
+  // Search by name or roll number (Only Active Students)
   const filteredStudents = students.filter((student) => {
+    // Exclude students who are not active
+    if (student.status !== "Active") {
+      return false;
+    }
+
     const query = search.toLowerCase().trim();
 
     return (
@@ -85,13 +90,24 @@ const IssueBook = ({ onIssue, onClose, book }) => {
 
   return (
     <div className="p-4">
-      <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4">
-        <div className="w-full max-w-md rounded-lg bg-white p-5">
+      <div className="fixed inset-0 flex items-center justify-center bg-black/50 p-4 z-50">
+        <div className="w-full max-w-md rounded-lg bg-white p-5 shadow-xl relative">
+          
+          {/* Close button for the modal */}
+          <button 
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+
           <h2 className="mb-4 text-lg font-semibold">Issue Book</h2>
 
           <form onSubmit={handleSubmit}>
             <label className="mb-2 block text-sm font-medium">
-              Search Student
+              Search Active Student
             </label>
 
             <input
@@ -102,34 +118,39 @@ const IssueBook = ({ onIssue, onClose, book }) => {
                 setSelectedStudent(null);
               }}
               placeholder="Enter name or roll number"
-              className="w-full rounded border p-2 outline-none focus:border-blue-500"
+              className="w-full rounded border border-gray-300 p-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
             />
 
             {/* Student list */}
-            <div className="mt-3 max-h-60 overflow-y-auto">
+            <div className="mt-3 max-h-60 overflow-y-auto border border-gray-100 rounded bg-gray-50/50">
               {loading ? (
-                <p className="p-3 text-sm text-gray-500">Loading students...</p>
+                <p className="p-3 text-sm text-gray-500">Loading active students...</p>
               ) : filteredStudents.length > 0 ? (
                 filteredStudents.map((student) => (
                   <div
-                    key={student._id}
+                    key={student._id || student.rollNo}
                     onClick={() => setSelectedStudent(student)}
-                    className={`cursor-pointer rounded border p-3 mb-2 ${
-                      selectedStudent?._id === student._id
+                    className={`cursor-pointer border-b last:border-b-0 p-3 ${
+                      selectedStudent?.rollNo === student.rollNo
                         ? "border-blue-500 bg-blue-50"
-                        : "border-gray-200 hover:bg-gray-50"
+                        : "border-gray-200 hover:bg-gray-100 bg-white"
                     }`}
                   >
-                    <p className="font-medium">{student.name}</p>
-                    <p className="text-sm text-gray-500">
+                    <div className="flex justify-between items-center">
+                      <p className="font-medium text-gray-800">{student.name}</p>
+                      <span className="text-[10px] uppercase font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                        Active
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-0.5">
                       Roll No: {student.rollNo}
                     </p>
                   </div>
                 ))
               ) : (
                 !loading && (
-                  <p className="p-3 text-sm text-gray-500">
-                    No students found.
+                  <p className="p-4 text-sm text-gray-500 text-center">
+                    No active students found matching your search.
                   </p>
                 )
               )}
@@ -137,19 +158,20 @@ const IssueBook = ({ onIssue, onClose, book }) => {
 
             {/* Selected student */}
             {selectedStudent && (
-              <p className="mt-3 text-sm text-green-700">
-                Selected: {selectedStudent.name} ({selectedStudent.rollNo})
-              </p>
+              <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded text-sm text-green-800 flex items-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                <span>Selected: <strong>{selectedStudent.name}</strong> ({selectedStudent.rollNo})</span>
+              </div>
             )}
 
-            <div className="mt-4 flex justify-end gap-2">
+            <div className="mt-6 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => {
                   setSearch("");
                   setSelectedStudent(null);
                 }}
-                className="rounded border px-4 py-2"
+                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 Clear
               </button>
@@ -157,9 +179,9 @@ const IssueBook = ({ onIssue, onClose, book }) => {
               <button
                 type="submit"
                 disabled={!selectedStudent}
-                className="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
+                className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
               >
-                Select Student
+                Issue to Student
               </button>
             </div>
           </form>
