@@ -3,33 +3,13 @@ import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import DashboardActivityLog from "../components/DashboardActivityLog";
 import DashboardStats from "../components/DashboardStats";
-
-// const MOCK_STATS = [
-//   {
-//     title: "Total Library Books",
-//     count: "4,300",
-//     color: "#e3f2fd",
-//     textColor: "#0d47a1",
-//   },
-//   {
-//     title: "Registered Students",
-//     count: "755",
-//     color: "#e8f5e9",
-//     textColor: "#1b5e20",
-//   },
-//   {
-//     title: "Active Book Loans",
-//     count: "226",
-//     color: "#fff3e0",
-//     textColor: "#e65100",
-//   },
-// ];
+import OverdueAlerts from "../components/OverDueAlerts";
 
 const DEPARTMENTS = [
   { name: "Computer Science" },
-  { name: "English Literature" },
-  { name: "Physics" },
-  { name: "Social Sciences" },
+  { name: "Management" },
+  { name: "Microbiology" },
+  { name: "Pharmacy" },
 ];
 
 function Dashboard() {
@@ -57,20 +37,28 @@ function Dashboard() {
             </div>
 
             {/* RIGHT SUB-PANEL */}
-            <div className="flex-1 bg-white border border-slate-200 p-5 rounded-xl h-fit shadow-sm">
-              <h3 className="m-0 mb-4 text-slate-800 border-b-2 border-slate-100 pb-2 font-bold flex items-center gap-2">
-                🏢 Active Departments
-              </h3>
-              <ul className="list-none p-0 m-0 space-y-1">
-                {departments.map((dept, index) => (
-                  <li
-                    key={index}
-                    className="py-2 border-b border-slate-50 last:border-0 text-slate-700 font-medium text-sm flex items-center gap-2"
-                  >
-                    <span className="text-blue-500">•</span> {dept.name}
-                  </li>
-                ))}
-              </ul>
+            <div className="flex-1 flex flex-col gap-6">
+              
+              {/* Active Departments Widget */}
+              <div className="bg-white border border-slate-200 p-5 rounded-xl h-fit shadow-sm">
+                <h3 className="m-0 mb-4 text-slate-800 border-b-2 border-slate-100 pb-2 font-bold flex items-center gap-2">
+                  🏢 Active Departments
+                </h3>
+                <ul className="list-none p-0 m-0 space-y-1">
+                  {departments.map((dept, index) => (
+                    <li
+                      key={index}
+                      className="py-2 border-b border-slate-50 last:border-0 text-slate-700 font-medium text-sm flex items-center gap-2"
+                    >
+                      <span className="text-blue-500">•</span> {dept.name}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Overdue Alerts Widget */}
+              <OverdueAlerts />
+              
             </div>
           </div>
         </main>
