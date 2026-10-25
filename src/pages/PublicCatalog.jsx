@@ -45,25 +45,40 @@ const PublicCatalog = () => {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
       {/* Navbar with Top-Right Login */}
-      <nav className="flex justify-between items-center px-6 py-4 bg-white shadow-sm border-b border-slate-200">
-        <div className="mb-2 px-2 pt-16 md:pt-0">
-          <h3 className="text-2xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-500  flex items-center gap-3">
-            <span className="drop-shadow-md flex items-center">
-              <img
-                src={process.env.PUBLIC_URL + "/logo192.jpeg"}
-                alt="Logo"
-                className="w-12 h-12 rounded-full object-cover shrink-0"
-              />
-            </span>
+      {/* Navbar with Top-Right Login */}
+      <nav className="flex flex-col sm:flex-row justify-between items-center px-6 py-4 bg-white shadow-sm border-b border-slate-200 gap-4">
+        <div className="flex items-center gap-3">
+          <img
+            src={process.env.PUBLIC_URL + "/logo192.jpeg"}
+            alt="Logo"
+            className="w-12 h-12 rounded-full object-cover shrink-0"
+          />
+          <h3 className="text-xl sm:text-2xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-500">
             Disha Institute of Science and Technology
           </h3>
         </div>
-        <Link
-          to="/login"
-          className="px-5 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors shadow-md"
-        >
-          Staff Login
-        </Link>
+        
+        {/* Navigation Buttons */}
+        <div className="flex items-center gap-3">
+          <Link
+            to="/register"
+            className="px-4 py-2 bg-emerald-50 text-emerald-700 text-sm font-semibold rounded-lg hover:bg-emerald-100 transition-colors border border-emerald-200"
+          >
+            Student Register
+          </Link>
+          <Link
+            to="/student-login"
+            className="px-4 py-2 bg-violet-50 text-violet-700 text-sm font-semibold rounded-lg hover:bg-violet-100 transition-colors border border-violet-200"
+          >
+            Student Login
+          </Link>
+          <Link
+            to="/login"
+            className="px-5 py-2.5 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-800 transition-colors shadow-md ml-2"
+          >
+            Staff Login
+          </Link>
+        </div>
       </nav>
 
       {/* Hero Search Section */}
