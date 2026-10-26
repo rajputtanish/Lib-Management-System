@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/Lib-Management-System/static/css/main.b59d97f3.css",
-    "main.js": "/Lib-Management-System/static/js/main.a743a0b6.js",
+    "main.css": "/Lib-Management-System/static/css/main.15e9384c.css",
+    "main.js": "/Lib-Management-System/static/js/main.7458f3eb.js",
     "static/js/453.7ec2144b.chunk.js": "/Lib-Management-System/static/js/453.7ec2144b.chunk.js",
     "static/media/login-bg.png": "/Lib-Management-System/static/media/login-bg.92f8eb2f18811aa40163.png",
     "index.html": "/Lib-Management-System/index.html",
-    "main.b59d97f3.css.map": "/Lib-Management-System/static/css/main.b59d97f3.css.map",
-    "main.a743a0b6.js.map": "/Lib-Management-System/static/js/main.a743a0b6.js.map",
+    "main.15e9384c.css.map": "/Lib-Management-System/static/css/main.15e9384c.css.map",
+    "main.7458f3eb.js.map": "/Lib-Management-System/static/js/main.7458f3eb.js.map",
     "453.7ec2144b.chunk.js.map": "/Lib-Management-System/static/js/453.7ec2144b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b59d97f3.css",
-    "static/js/main.a743a0b6.js"
+    "static/css/main.15e9384c.css",
+    "static/js/main.7458f3eb.js"
   ]
 }
