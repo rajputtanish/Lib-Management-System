@@ -188,9 +188,9 @@ function Students() {
             >
               <option value="All">All Departments</option>
               <option value="Computer Science">Computer Science</option>
-              <option value="English Literature">English Literature</option>
-              <option value="Physics">Physics</option>
-              <option value="Social Sciences">Social Sciences</option>
+              <option value="Management">Management</option>
+              <option value="Microbiology">Microbiology</option>
+              <option value="Pharmacy">Pharmacy</option>
             </select>
           </div>
 

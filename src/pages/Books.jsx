@@ -107,9 +107,9 @@ function Books() {
           "Content-Type": "application/json",
         },
         // Add .trim() here to remove accidental spaces from the input
-        body: JSON.stringify({ bookId: returnBookId.trim() }), 
+        body: JSON.stringify({ bookId: returnBookId.trim() }),
       });
-// ... existing code
+      // ... existing code
 
       const data = await response.json();
 
@@ -163,7 +163,7 @@ function Books() {
 
       // Update local state by filtering out all deleted books
       setInventory(inventory.filter((book) => !idsArray.includes(book.id)));
-      
+
       alert(data.message);
       setRemoveBookId("");
       setActiveForm(null);
@@ -307,121 +307,158 @@ function Books() {
                   ? "bg-red-600 text-white border-red-600 ring-4 ring-red-100"
                   : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50 hover:border-slate-400 hover:text-red-600"
               }`}
-              onClick={() => setActiveForm(activeForm === "remove" ? null : "remove")}
+              onClick={() =>
+                setActiveForm(activeForm === "remove" ? null : "remove")
+              }
             >
               {activeForm === "remove" ? "Close Remove Form" : "Remove Book"}
             </button>
           </div>
 
-
           {/* Conditionally Rendered Forms */}
-          {activeForm === "add" && (
-            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 mb-8 animate-in fade-in slide-in-from-top-2 duration-300">
-              <h3 className="text-xl font-bold text-slate-800 mt-0 mb-5">
-                Add New Book
-              </h3>
-              <form onSubmit={handleAddBook} className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Book Title"
-                  value={newBook.title}
-                  onChange={(e) =>
-                    setNewBook({ ...newBook, title: e.target.value })
-                  }
-                  required
-                  className="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                />
-                <input
-                  type="text"
-                  placeholder="Author"
-                  value={newBook.author}
-                  onChange={(e) =>
-                    setNewBook({ ...newBook, author: e.target.value })
-                  }
-                  required
-                  className="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                />
-                <input
-                  type="text"
-                  placeholder="Department (e.g., Computer Science)"
-                  value={newBook.department}
-                  onChange={(e) =>
-                    setNewBook({ ...newBook, department: e.target.value })
-                  }
-                  required
-                  className="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                />
-                <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                  <input
-                    type="number"
-                    min="1"
-                    placeholder="Qty"
-                    value={newBook.quantity}
-                    onChange={(e) =>
-                      setNewBook({
-                        ...newBook,
-                        quantity: parseInt(e.target.value) || 1,
-                      })
-                    }
-                    required
-                    className="w-full sm:w-32 p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                  />
-                  <button
-                    type="submit"
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-sm transition-colors duration-200 outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                  >
-                    Save to Inventory
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
+          {activeForm && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn">
+              <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 md:p-8 border border-slate-100 relative animate-in fade-in zoom-in-95 duration-200">
+                {/* Add Form Modal */}
+                {activeForm === "add" && (
+                  <>
+                    <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-100">
+                      <h3 className="text-xl font-bold text-slate-800 mt-0">
+                        Add New Book
+                      </h3>
+                      <button
+                        onClick={() => setActiveForm(null)}
+                        className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                        aria-label="Close modal"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <form onSubmit={handleAddBook} className="space-y-4">
+                      <input
+                        type="text"
+                        placeholder="Book Title"
+                        value={newBook.title}
+                        onChange={(e) =>
+                          setNewBook({ ...newBook, title: e.target.value })
+                        }
+                        required
+                        className="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Author"
+                        value={newBook.author}
+                        onChange={(e) =>
+                          setNewBook({ ...newBook, author: e.target.value })
+                        }
+                        required
+                        className="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Department (e.g., Computer Science)"
+                        value={newBook.department}
+                        onChange={(e) =>
+                          setNewBook({ ...newBook, department: e.target.value })
+                        }
+                        required
+                        className="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                      />
+                      <div className="flex flex-col sm:flex-row gap-4 pt-2">
+                        <input
+                          type="number"
+                          min="1"
+                          placeholder="Qty"
+                          value={newBook.quantity}
+                          onChange={(e) =>
+                            setNewBook({
+                              ...newBook,
+                              quantity: parseInt(e.target.value) || 1,
+                            })
+                          }
+                          required
+                          className="w-full sm:w-32 p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                        />
+                        <button
+                          type="submit"
+                          className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-sm transition-colors duration-200 outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                        >
+                          Save to Inventory
+                        </button>
+                      </div>
+                    </form>
+                  </>
+                )}
 
-          {activeForm === "return" && (
-            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 mb-8 animate-in fade-in slide-in-from-top-2 duration-300">
-              <h3 className="text-xl font-bold text-slate-800 mt-0 mb-5">
-                Return Book
-              </h3>
-              <form onSubmit={handleReturnBook} className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Book ID"
-                  value={returnBookId}
-                  onChange={(e) => setReturnBookId(e.target.value)}
-                  required
-                  className="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-                />
-                <button
-                  type="submit"
-                  className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-semibold py-3.5 px-8 rounded-xl shadow-sm transition-colors duration-200 outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                >
-                  Return Book
-                </button>
-              </form>
-            </div>
-          )}
+                {/* Return Form Modal */}
+                {activeForm === "return" && (
+                  <>
+                    <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-100">
+                      <h3 className="text-xl font-bold text-slate-800 mt-0">
+                        Return Book
+                      </h3>
+                      <button
+                        onClick={() => setActiveForm(null)}
+                        className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                        aria-label="Close modal"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <form onSubmit={handleReturnBook} className="space-y-4">
+                      <input
+                        type="text"
+                        placeholder="Book ID"
+                        value={returnBookId}
+                        onChange={(e) => setReturnBookId(e.target.value)}
+                        required
+                        className="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                      />
+                      <button
+                        type="submit"
+                        className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3.5 px-8 rounded-xl shadow-sm transition-colors duration-200 outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                      >
+                        Return Book
+                      </button>
+                    </form>
+                  </>
+                )}
 
-          {activeForm === "remove" && (
-            <div className="bg-rose-50 p-6 md:p-8 rounded-2xl shadow-sm border border-rose-200 mb-8 animate-in fade-in slide-in-from-top-2 duration-300">
-              <h3 className="text-xl font-bold text-rose-800 mt-0 mb-5 flex items-center gap-2">
-                ⚠️ Remove Book from Library
-              </h3>
-              <form onSubmit={handleRemoveBook} className="space-y-4">
-                <input
-                type="text"
-                placeholder="Enter Book IDs separated by commas (e.g. BK-1234-A, BK-1234-B)"
-                value={removeBookId}
-                onChange={(e) => setRemoveBookId(e.target.value)}
-                required
-                className="w-full p-3.5 bg-white border border-rose-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
-              />
-                <button
-                  type="submit"
-                  className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-semibold py-3.5 px-8 rounded-xl shadow-sm transition-colors duration-200 outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                >
-                  Permanently Delete
-                </button>
-              </form>
+                {/* Remove Form Modal */}
+                {activeForm === "remove" && (
+                  <>
+                    <div className="flex items-center justify-between pb-4 mb-5 border-b border-rose-100">
+                      <h3 className="text-xl font-bold text-rose-800 mt-0 flex items-center gap-2">
+                        ⚠️ Remove Book from Library
+                      </h3>
+                      <button
+                        onClick={() => setActiveForm(null)}
+                        className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                        aria-label="Close modal"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <form onSubmit={handleRemoveBook} className="space-y-4">
+                      <input
+                        type="text"
+                        placeholder="Enter Book IDs separated by commas (e.g. BK-1234-A, BK-1234-B)"
+                        value={removeBookId}
+                        onChange={(e) => setRemoveBookId(e.target.value)}
+                        required
+                        className="w-full p-3.5 bg-white border border-rose-300 rounded-xl text-slate-800 focus:bg-white focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition-all"
+                      />
+                      <button
+                        type="submit"
+                        className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3.5 px-8 rounded-xl shadow-sm transition-colors duration-200 outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                      >
+                        Permanently Delete
+                      </button>
+                    </form>
+                  </>
+                )}
+              </div>
             </div>
           )}
 
