@@ -12,7 +12,7 @@ import Students from "./pages/Students";
 
 function App() {
   return (
-    <BrowserRouter basename="/">
+    <BrowserRouter basename="/Lib-Management-System">
       <Routes>
         {/* Landing Route */}
         {/* <Route path="/" element={<HomeLogin />} /> */}
