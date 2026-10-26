@@ -20,17 +20,8 @@ function Books() {
     quantity: 1,
   });
 
-  // const [newBorrower, setNewBorrower] = useState({
-  //   rollNo: "",
-  //   name: "",
-  //   email: "",
-  //   phone: "",
-  //   date: "",
-  //   bookId: "",
-  // });
 
   const [returnBookId, setReturnBookId] = useState("");
-
   const [removeBookId, setRemoveBookId] = useState("");
 
   useEffect(() => {
@@ -99,6 +90,7 @@ function Books() {
       return;
     }
 
+    const cleanId = returnBookId.trim();
     try {
       // ... existing code
       const response = await fetch(`${envData.apiUrl}/books-issued/return`, {
@@ -123,7 +115,7 @@ function Books() {
       );
 
       setInventory(updatedInventory);
-      alert(`Book ${returnBookId} successfully returned!`);
+      alert(`Book ${cleanId} successfully returned!`);
 
       // 3. Clean up the form
       setReturnBookId("");
@@ -172,31 +164,6 @@ function Books() {
     }
   };
 
-  // const handleAddMoreCopies = (bookGroup) => {
-  //   const quantityInput = window.prompt(
-  //     `How many new copies of "${bookGroup.title}" are you adding to the library?`,
-  //     "1",
-  //   );
-  //   const quantityToAdd = parseInt(quantityInput);
-
-  //   if (!quantityToAdd || quantityToAdd < 1) return;
-
-  //   const newCopies = [];
-  //   const baseId = `BK-${Math.floor(1000 + Math.random() * 9000)}`;
-
-  //   for (let i = 0; i < quantityToAdd; i++) {
-  //     newCopies.push({
-  //       id: `${baseId}-NEW${i + 1}`,
-  //       title: bookGroup.title,
-  //       author: bookGroup.author,
-  //       department: bookGroup.department,
-  //       available: true,
-  //     });
-  //   }
-
-  //   setInventory([...inventory, ...newCopies]);
-  // };
-
   const groupedBooks = Object.values(
     inventory.reduce((acc, book) => {
       if (!acc[book.title]) {
@@ -235,32 +202,15 @@ function Books() {
     setShowIssueBookForm(null);
   };
 
-  // Helper styles for the toggle buttons
-  // const buttonStyle = {
-  //   padding: "10px 15px",
-  //   cursor: "pointer",
-  //   background: "#007bff",
-  //   color: "#fff",
-  //   border: "none",
-  //   borderRadius: "4px",
-  //   fontWeight: "bold",
-  // };
-
-  // const activeButtonStyle = {
-  //   ...buttonStyle,
-  //   background: "#0056b3",
-  //   boxShadow: "inset 0 3px 5px rgba(0,0,0,0.125)",
-  // };
-
-  if (showIssueBookForm) {
-    return (
-      <IssueBook
-        onClose={() => setShowIssueBookForm(null)}
-        book={showIssueBookForm}
-        onIssue={handleBorrow}
-      />
-    );
-  }
+  // if (showIssueBookForm) {
+  //   return (
+  //     <IssueBook
+  //       onClose={() => setShowIssueBookForm(null)}
+  //       book={showIssueBookForm}
+  //       onIssue={handleBorrow}
+  //     />
+  //   );
+  // }
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans w-full">
@@ -549,6 +499,14 @@ function Books() {
           </div>
         </div>
       </div>
+      
+      {showIssueBookForm && (
+        <IssueBook
+          onClose={() => setShowIssueBookForm(null)}
+          book={showIssueBookForm}
+          onIssue={handleBorrow}
+        />
+      )}
     </div>
   );
 }
