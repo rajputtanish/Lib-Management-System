@@ -20,9 +20,9 @@ function Books() {
     quantity: 1,
   });
 
-
   const [returnBookId, setReturnBookId] = useState("");
   const [removeBookId, setRemoveBookId] = useState("");
+  const [expandedBook, setExpandedBook] = useState(null);
 
   useEffect(() => {
     const fetchInventory = async () => {
@@ -200,6 +200,10 @@ function Books() {
     }
 
     setShowIssueBookForm(null);
+  };
+
+  const toggleExpand = (title) => {
+    setExpandedBook(expandedBook === title ? null : title);
   };
 
   // if (showIssueBookForm) {
@@ -440,66 +444,169 @@ function Books() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="flex flex-col gap-1">
             {filteredBooks.map((book) => {
               const totalCopies = book.copies.length;
               const availableCopies = book.copies.filter((c) => c.available);
               const availableCount = availableCopies.length;
+              const isExpanded = expandedBook === book.title;
 
               return (
                 <div
                   key={book.title}
-                  className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group"
+                  className="bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
                 >
-                  <div>
-                    <h3 className="text-lg font-bold text-slate-900 mb-1 mt-0 group-hover:text-blue-600 transition-colors">
-                      {book.title}
-                    </h3>
-                    <p className="text-slate-500 text-sm mb-4 font-medium">
-                      By {book.author}
-                    </p>
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 text-xs font-bold tracking-wide">
-                      🏢 {book.department}
-                    </span>
-                  </div>
-
-                  <div className="mt-6 pt-5 border-t border-slate-100">
-                    <div className="flex items-center justify-between mb-4 text-sm text-slate-600">
-                      <span>Remaining:</span>
-                      <span className="font-medium bg-slate-50 px-2 py-1 rounded-md">
-                        <strong
-                          className={
-                            availableCount > 0
-                              ? "text-green-600"
-                              : "text-red-500"
-                          }
+                  {/* Main Clickable Book Row */}
+                  <div
+                    onClick={() => toggleExpand(book.title)}
+                    className="p-5 sm:p-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer hover:bg-slate-50/80 transition-colors select-none"
+                  >
+                    {/* Left Side: Title, Author, Department */}
+                    <div className="flex items-start gap-3.5">
+                      {/* Chevron Icon */}
+                      <div
+                        className={`mt-1 p-1.5 rounded-lg bg-slate-100 text-slate-500 transition-transform duration-200 ${
+                          isExpanded
+                            ? "rotate-180 bg-blue-100 text-blue-600"
+                            : ""
+                        }`}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
                         >
-                          {availableCount}
-                        </strong>{" "}
-                        <span className="text-slate-400">/</span> {totalCopies}{" "}
-                        copies
-                      </span>
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2.5}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </div>
+
+                      <div>
+                        <h3 className="text-lg font-bold text-slate-900 m-0 group-hover:text-blue-600 transition-colors">
+                          {book.title}
+                        </h3>
+                        <p className="text-slate-500 text-sm mt-0.5 mb-2 font-medium">
+                          By {book.author}
+                        </p>
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-bold tracking-wide">
+                          🏢 {book.department}
+                        </span>
+                      </div>
                     </div>
 
-                    <button
-                      onClick={() => setShowIssueBookForm(book)}
-                      disabled={availableCount === 0}
-                      className={`w-full py-3 px-4 rounded-xl font-semibold transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-1 ${
-                        availableCount > 0
-                          ? "bg-blue-600 hover:bg-blue-700 text-white shadow-sm focus:ring-blue-500"
-                          : "bg-slate-100 text-slate-400 cursor-not-allowed"
-                      }`}
-                    >
-                      {availableCount > 0 ? "Borrow Copy" : "Out of Stock"}
-                    </button>
+                    {/* Right Side: Copies Count & Borrow Button */}
+                    <div className="flex sm:flex-col md:flex-row items-center justify-between sm:items-end md:items-center gap-4 border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100">
+                      <div className="text-sm text-slate-600 flex items-center gap-2">
+                        <span>Remaining:</span>
+                        <span className="font-medium bg-slate-100 px-2.5 py-1 rounded-md">
+                          <strong
+                            className={
+                              availableCount > 0
+                                ? "text-green-600"
+                                : "text-red-500"
+                            }
+                          >
+                            {availableCount}
+                          </strong>{" "}
+                          <span className="text-slate-400">/</span>{" "}
+                          {totalCopies} copies
+                        </span>
+                      </div>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation(); // Prevents row dropdown toggle when clicking Borrow
+                          setShowIssueBookForm(book);
+                        }}
+                        disabled={availableCount === 0}
+                        className={`py-2.5 px-5 rounded-xl font-semibold text-sm transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-1 shrink-0 ${
+                          availableCount > 0
+                            ? "bg-blue-600 hover:bg-blue-700 text-white shadow-sm focus:ring-blue-500"
+                            : "bg-slate-100 text-slate-400 cursor-not-allowed"
+                        }`}
+                      >
+                        {availableCount > 0 ? "Borrow Copy" : "Out of Stock"}
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Expandable Copies Drawer */}
+                  {isExpanded && (
+                    <div className="bg-slate-50 border-t border-slate-200 px-5 py-4 sm:px-6">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+                        Individual Copies ({totalCopies})
+                      </h4>
+
+                      <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-xs">
+                        <table className="w-full text-left border-collapse text-sm">
+                          <thead>
+                            <tr className="bg-slate-100/80 border-b border-slate-200 text-slate-600 text-xs uppercase font-bold">
+                              <th className="py-3 px-4">Book ID</th>
+                              <th className="py-3 px-4">Book Name</th>
+                              <th className="py-3 px-4">Author</th>
+                              <th className="py-3 px-4">Department</th>
+                              <th className="py-3 px-4 text-center">Status</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-slate-100">
+                            {book.copies.map((copy) => (
+                              <tr
+                                key={copy.id}
+                                className="hover:bg-blue-50/40 transition-colors"
+                              >
+                                <td className="py-3 px-4 font-mono font-bold text-slate-800">
+                                  <span className="px-2.5 py-1 bg-slate-100 rounded-md border border-slate-200 text-xs">
+                                    {copy.id}
+                                  </span>
+                                </td>
+                                <td className="py-3 px-4 font-semibold text-slate-800">
+                                  {book.title}
+                                </td>
+                                <td className="py-3 px-4 text-slate-600">
+                                  {book.author}
+                                </td>
+                                <td className="py-3 px-4 text-slate-600">
+                                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-md bg-blue-50 text-blue-700 text-xs font-medium">
+                                    {book.department}
+                                  </span>
+                                </td>
+                                <td className="py-3 px-4 text-center">
+                                  <span
+                                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
+                                      copy.available
+                                        ? "bg-emerald-100 text-emerald-700"
+                                        : "bg-amber-100 text-amber-700"
+                                    }`}
+                                  >
+                                    <span
+                                      className={`w-1.5 h-1.5 rounded-full ${
+                                        copy.available
+                                          ? "bg-emerald-500"
+                                          : "bg-amber-500"
+                                      }`}
+                                    />
+                                    {copy.available ? "Available" : "Issued"}
+                                  </span>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
         </div>
       </div>
-      
+
       {showIssueBookForm && (
         <IssueBook
           onClose={() => setShowIssueBookForm(null)}

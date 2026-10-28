@@ -85,7 +85,7 @@ function Students() {
               <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Department</th>
               <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Email ID</th>
               <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Contact</th>
-              <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Active Loans</th>
+              <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Books Record</th>
               <th className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-center">Account Status</th>
             </tr>
           </thead>

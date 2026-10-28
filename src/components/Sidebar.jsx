@@ -100,6 +100,17 @@ const Sidebar = () => {
           </Link>
 
           <Link
+            to="/books"
+            onClick={() => setIsOpen(false)}
+            className="px-4 py-3 text-slate-300 rounded-xl font-medium text-sm transition-all duration-200 hover:bg-slate-700 hover:text-white flex items-center gap-3 group"
+          >
+            <span className="text-lg group-hover:scale-110 transition-transform">
+              📖
+            </span>
+            Books Transactions
+          </Link>
+
+          <Link
             to="/students"
             onClick={() => setIsOpen(false)}
             className="px-4 py-3 text-slate-300 rounded-xl font-medium text-sm transition-all duration-200 hover:bg-slate-700 hover:text-white flex items-center gap-3 group"
