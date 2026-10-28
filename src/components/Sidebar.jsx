@@ -100,7 +100,7 @@ const Sidebar = () => {
           </Link>
 
           <Link
-            to="/books"
+            to="/books-transactions"
             onClick={() => setIsOpen(false)}
             className="px-4 py-3 text-slate-300 rounded-xl font-medium text-sm transition-all duration-200 hover:bg-slate-700 hover:text-white flex items-center gap-3 group"
           >

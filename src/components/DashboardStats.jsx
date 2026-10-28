@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { envData } from "../data";
 
 const DashboardStats = () => {
+  const navigate = useNavigate();
+
   const [totalBooks, setTotalBooks] = useState("...");
   const [activeStudents, setActiveStudents] = useState("...");
   const [issuedBooks, setIssuedBooks] = useState("...");
+
+  // Currently Issued Books Modal State
   const [activeIssuedList, setActiveIssuedList] = useState([]);
   const [showIssuedModal, setShowIssuedModal] = useState(false);
 
@@ -24,8 +29,10 @@ const DashboardStats = () => {
         setTotalBooks(booksData.length || 0);
 
         setActiveStudents(
-          studentsData.filter((student) => student.status === "Active")
-            .length || 0,
+          Array.isArray(studentsData)
+            ? studentsData.filter((student) => student.status === "Active")
+                .length
+            : 0
         );
 
         const currentlyIssued = issuedResult.data
@@ -33,11 +40,10 @@ const DashboardStats = () => {
           : [];
 
         setIssuedBooks(currentlyIssued.length);
-        // Sort newest issues first
         setActiveIssuedList(
           currentlyIssued.sort(
-            (a, b) => new Date(b.borrowTime) - new Date(a.borrowTime),
-          ),
+            (a, b) => new Date(b.borrowTime) - new Date(a.borrowTime)
+          )
         );
       } catch (error) {
         console.error("Error fetching stats:", error);
@@ -50,29 +56,43 @@ const DashboardStats = () => {
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+        {/* Clickable Total Library Books Card -> Navigates to /books */}
         <div
+          onClick={() => navigate("/books")}
           style={{ backgroundColor: "#e3f2fd", color: "#0d47a1" }}
-          className="p-5 rounded-xl shadow-sm"
+          className="p-5 rounded-xl shadow-sm cursor-pointer hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-200 select-none flex flex-col justify-between"
+          title="Click to open Books Collection page"
         >
-          <p className="m-0 mb-1 text-xs sm:text-sm uppercase tracking-wider font-semibold">
-            Total Library Books
-          </p>
-          <h1 className="m-0 text-3xl sm:text-4xl font-bold">{totalBooks}</h1>
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <p className="m-0 text-xs sm:text-sm uppercase tracking-wider font-semibold">
+                Total Library Books
+              </p>
+            </div>
+            <h1 className="m-0 text-3xl sm:text-4xl font-bold">{totalBooks}</h1>
+          </div>
         </div>
 
+        {/* Clickable Total Active Students Card -> Navigates to /students */}
         <div
+          onClick={() => navigate("/students")}
           style={{ backgroundColor: "#e8f5e9", color: "#1b5e20" }}
-          className="p-5 rounded-xl shadow-sm"
+          className="p-5 rounded-xl shadow-sm cursor-pointer hover:shadow-md hover:scale-[1.02] active:scale-[0.99] transition-all duration-200 select-none flex flex-col justify-between"
+          title="Click to open Student Directory page"
         >
-          <p className="m-0 mb-1 text-xs sm:text-sm uppercase tracking-wider font-semibold">
-            Total Active Students
-          </p>
-          <h1 className="m-0 text-3xl sm:text-4xl font-bold">
-            {activeStudents}
-          </h1>
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <p className="m-0 text-xs sm:text-sm uppercase tracking-wider font-semibold">
+                Total Active Students
+              </p>
+            </div>
+            <h1 className="m-0 text-3xl sm:text-4xl font-bold">
+              {activeStudents}
+            </h1>
+          </div>
         </div>
 
-        {/* Clickable Currently Issued Books Box */}
+        {/* Clickable Currently Issued Books Box -> Opens Popup Modal */}
         <div
           onClick={() => setShowIssuedModal(true)}
           style={{ backgroundColor: "#fff3e0", color: "#e65100" }}
@@ -84,9 +104,6 @@ const DashboardStats = () => {
               <p className="m-0 text-xs sm:text-sm uppercase tracking-wider font-semibold">
                 Currently Issued Books
               </p>
-              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-orange-200/60">
-                View All ↗
-              </span>
             </div>
             <h1 className="m-0 text-3xl sm:text-4xl font-bold">
               {issuedBooks}
@@ -114,7 +131,7 @@ const DashboardStats = () => {
                     Currently Issued Books
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5 font-medium m-0">
-                    Showing all {activeIssuedList.length} active library loans
+                    Showing all {activeIssuedList.length} active library issued books.....
                   </p>
                 </div>
               </div>
@@ -180,7 +197,7 @@ const DashboardStats = () => {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
-                          },
+                          }
                         )}
                       </p>
                     </div>
