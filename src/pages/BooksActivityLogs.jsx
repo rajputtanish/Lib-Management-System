@@ -138,7 +138,7 @@ function Transactions() {
                 Total: {totalCount}
               </span>
               <span className="px-3.5 py-1.5 rounded-xl bg-amber-50 border border-amber-200 text-xs font-bold text-amber-700">
-                Active Loans: {activeCount}
+                Active issued: {activeCount}
               </span>
               <span className="px-3.5 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-700">
                 Returned: {returnedCount}
