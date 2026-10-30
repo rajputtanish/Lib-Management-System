@@ -11,16 +11,13 @@ const ProtectedRoute = ({ children }) => {
       if (!isLoggedIn || !token) return;
 
       try {
-        const response = await fetch(
-          "http://localhost:4001/api/login/check-token",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
+        const response = await fetch(`${envData.apiUrl}/login/check-token`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
-        );
+        });
 
         if (!response.ok) {
           if (response.status === 401 || response.status === 403) {
