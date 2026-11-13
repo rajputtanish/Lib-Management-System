@@ -45,6 +45,16 @@ function Login() {
 
       {/* Main Glassmorphic Card */}
       <div className="relative z-10 w-full max-w-md p-8 sm:p-10 rounded-3xl bg-slate-900/10 backdrop-blur-lg border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+
+      {/* Back to Student Portal Button */}
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="mb-4 text-xs font-semibold text-cyan-300 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+        >
+          ← Back to Student Portal
+        </button>
+        
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold tracking-tight text-white mb-2 drop-shadow-md">

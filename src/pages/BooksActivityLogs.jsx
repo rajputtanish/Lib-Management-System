@@ -23,7 +23,7 @@ function Transactions() {
         const data = result.data || [];
         // Sort newest transactions first by borrowTime
         const sortedData = data.sort(
-          (a, b) => new Date(b.borrowTime) - new Date(a.borrowTime)
+          (a, b) => new Date(b.borrowTime) - new Date(a.borrowTime),
         );
         setTransactions(sortedData);
       } catch (err) {
@@ -58,15 +58,24 @@ function Transactions() {
     return `${year}-${month}-${day}`;
   };
 
+  const FINE_PER_DAY = 5;
+  const LOAN_LIMIT_DAYS = 14;
+
   const calculateDuration = (borrowTime, returnTime) => {
     const start = new Date(borrowTime);
     const end = returnTime ? new Date(returnTime) : new Date();
     const diffTime = Math.abs(end - start);
     const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    const overdueDays = Math.max(0, days - LOAN_LIMIT_DAYS);
+    const fine = overdueDays * FINE_PER_DAY;
+
     return {
       days,
-      isOverdue: !returnTime && days > 14,
-      wasReturnedLate: returnTime && days > 14,
+      overdueDays,
+      fine,
+      isOverdue: !returnTime && days > LOAN_LIMIT_DAYS,
+      wasReturnedLate: returnTime && days > LOAN_LIMIT_DAYS,
     };
   };
 
@@ -82,11 +91,21 @@ function Transactions() {
 
     // 1. Text Search (Book ID, Title, Author, Student Name, Roll No, or Formatted Date)
     const matchesSearch =
-      String(item.bookId || "").toLowerCase().includes(query) ||
-      String(item.bookTitle || "").toLowerCase().includes(query) ||
-      String(item.bookAuthor || "").toLowerCase().includes(query) ||
-      String(item.studentName || "").toLowerCase().includes(query) ||
-      String(item.studentId || "").toLowerCase().includes(query) ||
+      String(item.bookId || "")
+        .toLowerCase()
+        .includes(query) ||
+      String(item.bookTitle || "")
+        .toLowerCase()
+        .includes(query) ||
+      String(item.bookAuthor || "")
+        .toLowerCase()
+        .includes(query) ||
+      String(item.studentName || "")
+        .toLowerCase()
+        .includes(query) ||
+      String(item.studentId || "")
+        .toLowerCase()
+        .includes(query) ||
       formattedBorrowDate.includes(query) ||
       formattedReturnDate.includes(query) ||
       rawBorrowDate.includes(query) ||
@@ -113,7 +132,9 @@ function Transactions() {
 
   const totalCount = transactions.length;
   const activeCount = transactions.filter((t) => t.returnTime === null).length;
-  const returnedCount = transactions.filter((t) => t.returnTime !== null).length;
+  const returnedCount = transactions.filter(
+    (t) => t.returnTime !== null,
+  ).length;
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans w-full">
@@ -231,13 +252,16 @@ function Transactions() {
                     <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">
                       Status
                     </th>
+                    <th className="px-5 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">
+                      Fine (₹)
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm">
                   {filteredTransactions.length > 0 ? (
                     filteredTransactions.map((record) => {
                       const isReturned = record.returnTime !== null;
-                      const { days, isOverdue, wasReturnedLate } =
+                      const { days, overdueDays, fine, isOverdue, wasReturnedLate } =
                         calculateDuration(record.borrowTime, record.returnTime);
 
                       return (
@@ -295,7 +319,7 @@ function Transactions() {
                             )}
                           </td>
 
-                          {/* Duration */}
+                          {/* Duration (Updated with syntax fix and overdue logic) */}
                           <td className="px-5 py-4 text-center">
                             <span
                               className={`inline-block px-2.5 py-1 rounded-md text-xs font-bold ${
@@ -307,7 +331,14 @@ function Transactions() {
                               }`}
                             >
                               {days} {days === 1 ? "day" : "days"}
-                              {isOverdue && ` (${days - 14}d late)`}
+                              {(isOverdue || wasReturnedLate) && ` (${overdueDays}d late)`}
+                            </span>
+                          </td>
+
+                          {/* NEW FINE COLUMN */}
+                          <td className="px-5 py-4 text-center">
+                            <span className={`font-bold ${fine > 0 ? "text-rose-600" : "text-slate-400"}`}>
+                              {fine > 0 ? `₹${fine}` : "—"}
                             </span>
                           </td>
 
@@ -336,7 +367,7 @@ function Transactions() {
                   ) : (
                     <tr>
                       <td
-                        colSpan="7"
+                        colSpan="8" 
                         className="px-6 py-12 text-center text-slate-500 bg-slate-50/50"
                       >
                         <p className="text-base font-medium m-0">

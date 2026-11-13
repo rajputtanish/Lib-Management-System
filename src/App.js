@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
+import StudentPortal from "./pages/StudentPortal";
 import Login from "./pages/Login";
 import Books from "./pages/Books";
 import Dashboard from "./pages/Dashboard";
@@ -11,7 +12,13 @@ function App() {
   return (
     <BrowserRouter basename="/Lib-Management-System">
       <Routes>
-        <Route path="/" element={<Login />} />
+        {/* 1. Student Portal opens first at "/" */}
+        <Route path="/" element={<StudentPortal />} />
+
+        {/* 2. Admin Login page opens at "/login" */}
+        <Route path="/login" element={<Login />} />
+
+        {/* 3. Protected Admin Pages */}
         <Route
           path="/dashboard"
           element={
